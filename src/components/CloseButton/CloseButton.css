@@ -1,0 +1,30 @@
+.CloseButton {
+  position: relative;
+  padding: 0;
+  border: none;
+  width: 2em;
+  height: 2em;
+}
+.CloseButton:hover {
+  background-color: inherit;
+  color: inherit;
+}
+
+.CloseButton .far,
+.CloseButton .fas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity .2s;
+  font-size: 2em;
+}
+
+.CloseButton .fas,
+.CloseButton:hover .far {
+  opacity: 0;
+}
+
+.CloseButton .far,
+.CloseButton:hover .fas {
+  opacity: 1;
+}

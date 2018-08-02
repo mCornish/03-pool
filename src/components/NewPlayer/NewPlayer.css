@@ -1,0 +1,17 @@
+.NewPlayer__field {
+  display: flex;
+  flex-direction: column;
+  width: calc(50% - .5em);
+}
+
+.NewPlayer__buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.NewPlayer__cancel {
+  width: calc(30% - .5em);
+}
+.NewPlayer__submit {
+  width: calc(70% - .5em);
+}
