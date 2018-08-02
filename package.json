@@ -7,6 +7,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.1.0-11",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
+    "gh-pages": "^1.2.0",
     "lodash": "^4.17.10",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
@@ -15,9 +16,12 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "homepage": "https://mCornish.github.io/O3-Pool"
 }
