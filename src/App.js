@@ -64,18 +64,20 @@ class App extends Component {
         </div>
         
 
-        <div className={selectingPlayers ? 'is-selecting' : ''}>
+        <div className={`Players-container ${selectingPlayers ? 'is-selecting' : ''}`}>
           <h2>Players</h2>
-          <p className={selectingPlayers ? '' : 'is-invisible'}>Select 2 players to before you start playing.</p>
+          <p className={`text-small ${selectingPlayers ? '' : 'is-invisible'}`}>
+            Select 2 players to before you start playing.
+          </p>
           <table className="Players">
             <thead>
               <tr>
-                <th>Player Name</th>
-                <th>Player Wins</th>
+                <th>Name</th>
+                <th>Wins</th>
               </tr>
             </thead>
             <tbody>
-            {_.sortBy(this.state.players, 'wins').map((player) => (
+            {_.reverse(_.sortBy(this.state.players, 'wins')).map((player) => (
               <tr
                 key={player.id}
                 onClick={() => this.setPlayerActive(player.id)}
@@ -86,7 +88,8 @@ class App extends Component {
                 <td className="text-right">
                   {player.isActive && enoughActive ? (
                     <button onClick={() => this.declareWinner(player)}>Winner!</button>
-                  ) : (
+                  ) : 
+                  !this.state.isPlaying && (
                     <button
                       onClick={() => this.removePlayer(player.id)}
                     >Remove</button>
@@ -176,8 +179,8 @@ class App extends Component {
     players[playerIndex] = updatedPlayer;
 
     this.setState({ players });
-    storage.removeItem(`op:player_name_${playerId}`, playerInfo.name);
-    storage.removeItem(`op:player_wins_${playerId}`, playerInfo.wins);
+    if (playerInfo.name) storage.setItem(`op:player_name_${playerId}`, playerInfo.name);
+    storage.setItem(`op:player_wins_${playerId}`, playerInfo.wins || 0);
   }
 }
 

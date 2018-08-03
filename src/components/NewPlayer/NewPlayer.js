@@ -20,7 +20,7 @@ class NewPlayer extends Component {
     >
       <div className="flex-row flex-margin">
         <div className="NewPlayer__field">
-          <label htmlFor="new-player-name">Name</label>
+          <label htmlFor="new-player-name">Player Name</label>
           <input
             id="new-player-name"
             onChange={(e) => this.updatePlayer({ name: e.target.value })}
@@ -28,7 +28,7 @@ class NewPlayer extends Component {
           />
         </div>
         <div className="NewPlayer__field">
-          <label htmlFor="new-player-wins">Wins</label>
+          <label htmlFor="new-player-wins">Player Wins</label>
           <input
             id="new-player-wins"
             onChange={(e) => this.updatePlayer({ wins: e.target.value })}

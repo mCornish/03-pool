@@ -2,26 +2,6 @@
   box-sizing: border-box;
 }
 
-h1, h2 {
-  text-align: center;
-}
-
-/* Players */
-.is-selecting {
-  background-color: rgba(0,0,0,.2);
-}
-.Players {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.Players__player td {
-  padding: .5em;
-}
-.Players__player.is-active td {
-  background-color: rgba(0,0,0,.2);
-}
-
 @media screen and (min-width: 1px) {
   .App {
     width: 100%;
@@ -31,6 +11,30 @@ h1, h2 {
 
 @media screen and (min-width: 800px) {
   .App {
-    width: 20em;
+    width: 50%;
   }
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+/* Players */
+.Players-container {
+  margin-top: 3em;
+}
+.Players-container.is-selecting {
+  background-color: rgba(0,0,0,.2);
+}
+
+.Players {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.Players__player td {
+  padding: 1em;
+}
+.Players__player.is-active td {
+  background-color: rgba(0,0,0,.2);
 }
