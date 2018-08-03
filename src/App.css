@@ -1,3 +1,7 @@
+.App {
+  box-sizing: border-box;
+}
+
 h1, h2 {
   text-align: center;
 }
@@ -11,9 +15,9 @@ h1, h2 {
   border-collapse: collapse;
 }
 
-.Players__player {
+.Players__player td {
+  padding: .5em;
 }
-
 .Players__player.is-active td {
   background-color: rgba(0,0,0,.2);
 }

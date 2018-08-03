@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { randomName } from '../../utils';
 import './NewPlayer.css';
 
 class NewPlayer extends Component {
@@ -23,7 +24,7 @@ class NewPlayer extends Component {
           <input
             id="new-player-name"
             onChange={(e) => this.updatePlayer({ name: e.target.value })}
-            placeholder="First Last"
+            placeholder={randomName()}
           />
         </div>
         <div className="NewPlayer__field">

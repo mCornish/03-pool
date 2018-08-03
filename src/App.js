@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import uuid from 'uuid/v4';
+import { localPlayers } from './utils';
 import './App.css';
 
 import Declaration from './components/Declaration/Declaration';
@@ -22,7 +23,7 @@ class App extends Component {
   componentDidMount() {
     // TODO: Create an "office" collection to track groups of players
     // TODO: Log in as an office to get players
-    const players = getLocalPlayers();
+    const players = localPlayers();
     this.setState({
       addingPlayer: players.length < 2,
       players
@@ -69,8 +70,8 @@ class App extends Component {
           <table className="Players">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Wins</th>
+                <th>Player Name</th>
+                <th>Player Wins</th>
               </tr>
             </thead>
             <tbody>
@@ -177,38 +178,6 @@ class App extends Component {
     this.setState({ players });
     storage.removeItem(`op:player_name_${playerId}`, playerInfo.name);
     storage.removeItem(`op:player_wins_${playerId}`, playerInfo.wins);
-  }
-}
-
-/** Retrieves players from localStorage
- * @returns {Object[]} A collection of players
- */
-function getLocalPlayers() {
-  const playerItems = _.toPairs(localStorage).filter(isPlayer);
-  return playerItems.reduce(toPlayers, []);
-
-  function isPlayer(itemPair) {
-    return itemPair[0].indexOf('op:player') === 0;
-  }
-
-  function toPlayers(players, itemPair) {
-    const key = itemPair[0];
-    const value = itemPair[1];
-    if (!key.includes('player')) return players;
-    const playerKey = key.split('_')[1];
-    const id = key.split('_')[2];
-
-    // Check for existing player and update accordingly
-    const playerIndex = _.findIndex(players, { id });
-    const playerInfo = { id, [playerKey]: value };
-    const player = playerIndex > -1 ?
-      _.assign({}, players[playerIndex], playerInfo) :
-      playerInfo;
-
-    if (playerIndex === -1) return players.concat(player);
-    const newPlayers = players;
-    newPlayers[playerIndex] = player;
-    return newPlayers;
   }
 }
 
