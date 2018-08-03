@@ -14,7 +14,7 @@ class NewPlayer extends Component {
 
   render = () => (
     <form
-      onSubmit={(e) => this.props.onSubmit(e, this.state.player)}
+      onSubmit={(e) => this.handleSubmit(e, this.state.player)}
       className="NewPlayer flex-col flex-margin"
     >
       <div className="flex-row flex-margin">
@@ -41,7 +41,7 @@ class NewPlayer extends Component {
       <div className="NewPlayer__buttons">
         <button
           type="button"
-          onClick={this.props.onSubmit}
+          onClick={this.handleSubmit}
           className="NewPlayer__cancel"
         >Cancel</button>
         <button
@@ -51,6 +51,13 @@ class NewPlayer extends Component {
       </div>
     </form>
   );
+
+  handleSubmit = (e, player) => {
+    e.preventDefault();
+    if (e.target.reset) e.target.reset();
+    this.props.onSubmit(player);
+    this.setState({ player: {} });
+  }
 
   updatePlayer = (playerInfo) => {
     const player = _.assign({}, this.state.player, playerInfo);

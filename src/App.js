@@ -1,3 +1,5 @@
+// TODO: Add a server and Mongo
+
 import React, { Component } from 'react';
 import _ from 'lodash';
 import uuid from 'uuid/v4';
@@ -6,19 +8,31 @@ import './App.css';
 import Declaration from './components/Declaration/Declaration';
 import NewPlayer from './components/NewPlayer/NewPlayer';
 
+// TODO: Implement a database to store office & player data
+const storage = window.localStorage;
 
 class App extends Component {
   state = {
     addingPlayer: true,
     isPlaying: false,
-    newPlayer: {},
     players: [],
     winner: null
   }
+
+  componentDidMount() {
+    // TODO: Create an "office" collection to track groups of players
+    // TODO: Log in as an office to get players
+    const players = getLocalPlayers();
+    this.setState({
+      addingPlayer: players.length < 2,
+      players
+    })
+  }
+
   render() {
     const activePlayers = _.filter(this.state.players, { isActive: true });
     const enoughActive = activePlayers.length === 2;
-    const enoughPlayers = this.state.players.length === 2;
+    const enoughPlayers = this.state.players.length >= 2;
     const selectingPlayers = this.state.isPlaying && !enoughActive;
 
     return (
@@ -26,10 +40,16 @@ class App extends Component {
         <h1 className="App__logo">O<sub>3</sub> Pool</h1>
 
         <div className="flex-col flex-margin">
-          <button
-            onClick={this.startGame}
-            className={!enoughPlayers ? 'is-invisible' : ''}
-          >New Game</button>
+          {this.state.isPlaying ? (
+            <button
+            onClick={this.endGame}
+          >End Game</button>
+          ) : (
+            <button
+              onClick={this.startGame}
+              className={!enoughPlayers ? 'is-invisible' : ''}
+            >New Game</button>
+          )}
 
           {(this.state.addingPlayer || !enoughPlayers) ? (
             <NewPlayer
@@ -82,9 +102,10 @@ class App extends Component {
     );
   }
 
-  addPlayer = ({ name, wins = 0}) => {
+  // TODO: Prevent players from entering a non-unique ID
+  addPlayer = ({ id = uuid(), name, wins = 0}) => {
     const player = {
-      id: uuid(),
+      id,
       name,
       wins
     };
@@ -94,25 +115,26 @@ class App extends Component {
       addingPlayer,
       players
     });
+    storage.setItem(`op:player_name_${id}`, name);
+    storage.setItem(`op:player_wins_${id}`, wins);
   }
 
   declareWinner = (player) => {
     this.setState({ winner: player.name });
-    this.updatePlayer(player.id, { wins: player.wins + 1 });
+    this.updatePlayer(player.id, { wins: Number(player.wins) + 1 });
     this.endGame();
   }
 
-  handlePlayerSubmit = (e, player) => {
-    e.preventDefault();
-    
+  handlePlayerSubmit = (player) => {
     if (!player) return this.setState({ addingPlayer: false });
-    e.target.reset();
     this.addPlayer(player);
   }
 
   removePlayer = (playerId) => {
     const players = _.reject(this.state.players, { id: playerId });
     this.setState({ players });
+    storage.removeItem(`op:player_name_${playerId}`);
+    storage.removeItem(`op:player_wins_${playerId}`);
   }
 
   endGame = () => {
@@ -153,6 +175,40 @@ class App extends Component {
     players[playerIndex] = updatedPlayer;
 
     this.setState({ players });
+    storage.removeItem(`op:player_name_${playerId}`, playerInfo.name);
+    storage.removeItem(`op:player_wins_${playerId}`, playerInfo.wins);
+  }
+}
+
+/** Retrieves players from localStorage
+ * @returns {Object[]} A collection of players
+ */
+function getLocalPlayers() {
+  const playerItems = _.toPairs(localStorage).filter(isPlayer);
+  return playerItems.reduce(toPlayers, []);
+
+  function isPlayer(itemPair) {
+    return itemPair[0].indexOf('op:player') === 0;
+  }
+
+  function toPlayers(players, itemPair) {
+    const key = itemPair[0];
+    const value = itemPair[1];
+    if (!key.includes('player')) return players;
+    const playerKey = key.split('_')[1];
+    const id = key.split('_')[2];
+
+    // Check for existing player and update accordingly
+    const playerIndex = _.findIndex(players, { id });
+    const playerInfo = { id, [playerKey]: value };
+    const player = playerIndex > -1 ?
+      _.assign({}, players[playerIndex], playerInfo) :
+      playerInfo;
+
+    if (playerIndex === -1) return players.concat(player);
+    const newPlayers = players;
+    newPlayers[playerIndex] = player;
+    return newPlayers;
   }
 }
 
