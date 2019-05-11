@@ -1,7 +1,14 @@
 // TODO: Add a server and Mongo
 
 import React, { Component } from 'react';
-import _ from 'lodash';
+import { 
+  assign as _assign,
+  filter as _filter,
+  findIndex as _findIndex,
+  reject as _reject,
+  reverse as _reverse,
+  sortBy as _sortBy
+} from 'lodash';
 import uuid from 'uuid/v4';
 import { localPlayers } from './utils';
 import './App.css';
@@ -31,7 +38,7 @@ class App extends Component {
   }
 
   render() {
-    const activePlayers = _.filter(this.state.players, { isActive: true });
+    const activePlayers = _filter(this.state.players, { isActive: true });
     const enoughActive = activePlayers.length === 2;
     const enoughPlayers = this.state.players.length >= 2;
     const selectingPlayers = this.state.isPlaying && !enoughActive;
@@ -77,7 +84,7 @@ class App extends Component {
               </tr>
             </thead>
             <tbody>
-            {_.reverse(_.sortBy(this.state.players, 'wins')).map((player) => (
+            {_reverse(_sortBy(this.state.players, 'wins')).map((player) => (
               <tr
                 key={player.id}
                 onClick={() => this.setPlayerActive(player.id)}
@@ -135,7 +142,7 @@ class App extends Component {
   }
 
   removePlayer = (playerId) => {
-    const players = _.reject(this.state.players, { id: playerId });
+    const players = _reject(this.state.players, { id: playerId });
     this.setState({ players });
     storage.removeItem(`op:player_name_${playerId}`);
     storage.removeItem(`op:player_wins_${playerId}`);
@@ -149,13 +156,13 @@ class App extends Component {
     });
 
     function toInactive(player) {
-      return _.assign({}, player, { isActive: false });
+      return _assign({}, player, { isActive: false });
     }
   }
 
   setPlayerActive = (playerId) => {
     if (!this.state.isPlaying) return undefined;
-    const activePlayers = _.filter(this.state.players, { isActive: true });
+    const activePlayers = _filter(this.state.players, { isActive: true });
     if (activePlayers.length === 2) return undefined;
     this.updatePlayer(playerId, { isActive: true })
   }
@@ -172,9 +179,9 @@ class App extends Component {
   }
 
   updatePlayer = (playerId, playerInfo) => {
-    const playerIndex = _.findIndex(this.state.players, { id: playerId });
+    const playerIndex = _findIndex(this.state.players, { id: playerId });
     const player = this.state.players[playerIndex];
-    const updatedPlayer = _.assign({}, player, playerInfo);
+    const updatedPlayer = _assign({}, player, playerInfo);
     const players = this.state.players;
     players[playerIndex] = updatedPlayer;
 
