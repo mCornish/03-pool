@@ -23,6 +23,10 @@ h1, h2 {
 .Players-container {
   margin-top: 3em;
 }
+.Players-container h2,
+.Players-container p {
+  padding: 1em;
+}
 .Players-container.is-selecting {
   background-color: rgba(0,0,0,.2);
 }
